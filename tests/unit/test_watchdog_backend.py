@@ -1,6 +1,8 @@
 import time
 from pathlib import Path
+
 from fileops.monitor.watchdog_backend import WatchdogBackend
+
 
 def test_watchdog_detects_new_file(tmp_path: Path) -> None:
     detected_files: list[Path] = []

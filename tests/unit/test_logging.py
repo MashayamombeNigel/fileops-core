@@ -1,8 +1,10 @@
 import json
 from pathlib import Path
+
 import structlog
 
 from fileops.logging_setup import setup_logging
+
 
 def test_logging_generates_both_formats(tmp_path: Path) -> None:
     setup_logging(tmp_path)

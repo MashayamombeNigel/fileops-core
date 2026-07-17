@@ -1,9 +1,10 @@
-import pytest
 from pathlib import Path
-from datetime import datetime, timezone
 
-from fileops.events.models import FileEvent, ErrorEvent
+import pytest
+
+from fileops.events.models import ErrorEvent, FileEvent
 from fileops.state.sqlite_store import SqliteStateStore
+
 
 @pytest.fixture
 def store(tmp_path: Path) -> SqliteStateStore:

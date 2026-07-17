@@ -1,5 +1,7 @@
 import sys
 from pathlib import Path
+from typing import Annotated
+
 import typer
 from rich.console import Console
 
@@ -16,21 +18,28 @@ console = Console()
 
 @app.command()
 def monitor(
-    config: Path = typer.Option(
-        "config.yaml",
+    config: Annotated[Path, typer.Option(
         "--config",
         "-c",
         help="Path to the YAML configuration file.",
-    )
+    )] = Path("config.yaml")
 ) -> None:
     """Start monitoring a folder for new files based on the provided configuration."""
     try:
-        console.print(f"[bold blue][INFO][/bold blue] Loading configuration from [yellow]{config}[/yellow]...")
+        console.print(
+            f"[bold blue][INFO][/bold blue] Loading configuration from [yellow]{config}[/yellow]..."
+        )
         cfg = load_config(str(config))
         
         console.print("[bold green][INFO][/bold green] Starting FileOps Core...")
-        console.print(f"[bold green][INFO][/bold green] Watching directory: [yellow]{cfg.folder_path.resolve()}[/yellow]")
-        console.print(f"[bold green][INFO][/bold green] Logs will be written to: [yellow]{cfg.log_path.resolve()}[/yellow]")
+        console.print(
+            f"[bold green][INFO][/bold green] Watching directory: "
+            f"[yellow]{cfg.folder_path.resolve()}[/yellow]"
+        )
+        console.print(
+            f"[bold green][INFO][/bold green] Logs will be written to: "
+            f"[yellow]{cfg.log_path.resolve()}[/yellow]"
+        )
         console.print("[bold cyan][INFO][/bold cyan] Press Ctrl+C to exit.")
         
     except ConfigError as e:

@@ -1,6 +1,7 @@
 import abc
-from typing import Optional
-from fileops.events.models import MonitoredFolder, FileEvent, ErrorEvent
+
+from fileops.events.models import ErrorEvent, FileEvent, MonitoredFolder
+
 
 class StateStore(abc.ABC):
     @abc.abstractmethod
@@ -8,7 +9,7 @@ class StateStore(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def get_folder_by_path(self, path: str) -> Optional[MonitoredFolder]:
+    def get_folder_by_path(self, path: str) -> MonitoredFolder | None:
         pass
 
     @abc.abstractmethod

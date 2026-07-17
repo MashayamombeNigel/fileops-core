@@ -1,6 +1,7 @@
+from pathlib import Path
+
 import pytest
 import yaml
-from pathlib import Path
 
 from fileops.config import load_config
 from fileops.exceptions import ConfigError

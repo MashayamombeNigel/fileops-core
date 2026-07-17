@@ -1,11 +1,11 @@
 import sqlite3
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
-from fileops.events.models import MonitoredFolder, FileEvent, ErrorEvent
-from fileops.state.store import StateStore
+from fileops.events.models import ErrorEvent, FileEvent, MonitoredFolder
 from fileops.exceptions import FileOpsError
+from fileops.state.store import StateStore
+
 
 def adapt_datetime_iso(val: datetime) -> str:
     return val.isoformat()
@@ -36,7 +36,7 @@ class SqliteStateStore(StateStore):
             conn.execute("PRAGMA journal_mode=WAL")
             return conn
         except sqlite3.Error as e:
-            raise StateStoreError(f"Failed to connect to SQLite: {e}")
+            raise StateStoreError(f"Failed to connect to SQLite: {e}") from e
 
     def _init_db(self) -> None:
         schema = """
@@ -86,7 +86,7 @@ class SqliteStateStore(StateStore):
             try:
                 conn.executescript(schema)
             except sqlite3.Error as e:
-                raise StateStoreError(f"Failed to initialize SQLite schema: {e}")
+                raise StateStoreError(f"Failed to initialize SQLite schema: {e}") from e
 
     def register_folder(self, path: str) -> MonitoredFolder:
         folder = self.get_folder_by_path(path)
@@ -104,7 +104,7 @@ class SqliteStateStore(StateStore):
             )
         return folder
 
-    def get_folder_by_path(self, path: str) -> Optional[MonitoredFolder]:
+    def get_folder_by_path(self, path: str) -> MonitoredFolder | None:
         with self._get_connection() as conn:
             row = conn.execute(
                 "SELECT * FROM monitored_folders WHERE path = ?", (path,)
@@ -120,7 +120,8 @@ class SqliteStateStore(StateStore):
                 conn.execute(
                     """
                     INSERT INTO file_events 
-                    (event_id, folder_id, filename, filepath, size_bytes, extension, file_hash, file_mtime, detected_at)
+                    (event_id, folder_id, filename, filepath, size_bytes, 
+                     extension, file_hash, file_mtime, detected_at)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (

@@ -1,9 +1,12 @@
 import logging
 import logging.config
+import sys
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
+from typing import Any
+
 import structlog
-import sys
+
 
 def setup_logging(log_dir: Path, max_bytes: int = 10 * 1024 * 1024, backup_count: int = 5) -> None:
     if not log_dir.exists():
@@ -14,7 +17,7 @@ def setup_logging(log_dir: Path, max_bytes: int = 10 * 1024 * 1024, backup_count
 
     timestamper = structlog.processors.TimeStamper(fmt="iso", utc=True)
     
-    shared_processors = [
+    shared_processors: list[Any] = [
         structlog.stdlib.add_log_level,
         structlog.stdlib.add_logger_name,
         timestamper,

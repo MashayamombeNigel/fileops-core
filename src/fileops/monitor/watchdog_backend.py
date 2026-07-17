@@ -1,9 +1,10 @@
-from pathlib import Path
 import logging
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler, FileCreatedEvent, DirCreatedEvent
+from pathlib import Path
 
-from fileops.monitor.base import MonitorBackend, EventHandlerCallable
+from watchdog.events import FileSystemEvent, FileSystemEventHandler
+from watchdog.observers import Observer
+
+from fileops.monitor.base import EventHandlerCallable, MonitorBackend
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +14,7 @@ class FileCreateHandler(FileSystemEventHandler):
         self.callback = callback
         super().__init__()
 
-    def on_created(self, event: FileCreatedEvent | DirCreatedEvent) -> None:
+    def on_created(self, event: FileSystemEvent) -> None:
         if event.is_directory:
             return
             
@@ -35,12 +36,12 @@ class WatchdogBackend(MonitorBackend):
         if self._is_running:
             return
             
-        self._observer.schedule(
+        self._observer.schedule(  # type: ignore[no-untyped-call]
             self._handler, 
             str(self.folder_path), 
             recursive=False
         )
-        self._observer.start()
+        self._observer.start()  # type: ignore[no-untyped-call]
         self._is_running = True
         logger.debug(f"WatchdogBackend started monitoring {self.folder_path}")
 
@@ -48,7 +49,7 @@ class WatchdogBackend(MonitorBackend):
         if not self._is_running:
             return
             
-        self._observer.stop()
+        self._observer.stop()  # type: ignore[no-untyped-call]
         self._observer.join()
         self._is_running = False
         logger.debug("WatchdogBackend stopped")

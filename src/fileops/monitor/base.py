@@ -1,6 +1,6 @@
 import abc
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable
 
 EventHandlerCallable = Callable[[Path], None]
 
