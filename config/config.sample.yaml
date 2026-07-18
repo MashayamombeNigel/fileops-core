@@ -1,0 +1,21 @@
+# Only folder_path and log_path are required. Every other field below shows
+# its default value — remove a line to accept the default rather than
+# leaving it commented out, since comments are stripped before parsing.
+
+folder_path: "/path/to/watch"
+log_path: "/path/to/logs"
+
+# db_path: "/path/to/logs/fileops_state.db"   # defaults to log_path/fileops_state.db
+
+backend: "watchdog"          # "watchdog" or "polling" (use polling for network/SMB/NFS drives)
+polling_interval_seconds: 5.0
+ignore_hidden_files: true
+
+stability_check_interval_seconds: 1.0
+stability_check_timeout_seconds: 30.0
+
+log_rotation_max_bytes: 10000000
+log_rotation_backup_count: 5
+
+heartbeat_interval_seconds: 3600
+state_retention_days: 30
